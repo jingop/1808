@@ -1,18 +1,52 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <div class="loading"
+         v-if="loading">加载中...</div>
+    <div v-else>请求完成之后显示数据{{result}}</div>
+    <button class='btn'
+            @click="getL">发送请求</button>
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
+<script>
+// @ is an alias to /src
+import { mapState } from 'vuex';
+import { getList } from '../api';
 
-@Component({
-  components: {
-    HelloWorld
+export default {
+  name: 'home',
+  data () {
+    return {
+      result : []
+    }
+  },
+  computed: {
+    ...mapState(['loading'])
+  },
+  created () {},
+  methods: {
+    async getL () {
+      this.result = await getList()
+      console.log(this.result)
+    }
   }
-})
-export default class Home extends Vue {}
+}
 </script>
+<style  scoped>
+* {
+  font-size: 40px;
+}
+.loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  top: 0;
+  opacity: 0.6;
+}
+.btn {
+  width: 200px;
+  height: 60px;
+  font-size: 40px;
+}
+</style>
